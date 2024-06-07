@@ -8,7 +8,7 @@ VOLUME /tmp
 EXPOSE 8080
 
 # The application's jar file
-ARG JAR_FILE=target/spring-boot-app-1.0.0.jar
+ARG JAR_FILE=target/web-forum-app-0.0.1-snapshot.jar
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} app.jar
