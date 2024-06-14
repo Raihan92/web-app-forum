@@ -1,17 +1,32 @@
-# Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+# Stage 1: Build the application
+FROM maven:3.8.5-openjdk-8 AS builder
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+# Set the working directory in the container
+WORKDIR /app
 
-# Make port 8080 available to the world outside this container
+# Copy the pom.xml file and download the dependencies
+COPY pom.xml .
+
+# Download the dependencies
+RUN mvn dependency:go-offline -B
+
+# Copy the source code and build the application
+COPY src ./src
+
+# Build the application
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run the application
+FROM openjdk:8-jdk-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the jar file from the builder stage
+COPY --from=builder /app/target/web-forum-app-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port the application runs on
 EXPOSE 8080
 
-# The application's jar file
-ARG JAR_FILE=target/web-forum-app-0.0.1-snapshot.jar
-
-# Add the application's jar to the container
-ADD ${JAR_FILE} app.jar
-
-# Run the jar file
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
