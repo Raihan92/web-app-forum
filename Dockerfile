@@ -23,7 +23,7 @@ FROM openjdk:8-jdk-slim
 WORKDIR /app
 
 # Copy the jar file from the builder stage
-COPY --from=builder /app/target/web-forum-app-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
 # Expose the port the application runs on
 EXPOSE 8080

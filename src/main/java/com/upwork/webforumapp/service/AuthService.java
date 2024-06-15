@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Objects;
 
 @Service
@@ -28,6 +29,10 @@ public class AuthService {
     @Value("${admin_api_key}")
     public void setNameStatic(String admin_api_key){
         this.auth_admin_key = admin_api_key;
+    }
+
+    @PostConstruct
+    public void init() {
     }
 
     public void saveToken(AuthToken authenticationToken) {
